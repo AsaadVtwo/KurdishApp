@@ -7,31 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kurdish.Models;
 using KurdishApp.Data;
-using KurdishApp.Data.Repositories.Interfaces;
-using KurdishApp.Data.Repositories;
 
 namespace KurdishApp.Controllers
 {
-    public class TeachersController : Controller
+    public class SchoolsController : Controller
     {
-
         private readonly ApplicationDbContext _context;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public TeachersController(IUnitOfWork unitOfWork, ApplicationDbContext context)
+        public SchoolsController(ApplicationDbContext context)
         {
-            _unitOfWork = unitOfWork;
             _context = context;
-
         }
 
-        // GET: Teachers
-        public async Task <IActionResult> Index()
+        // GET: Schools
+        public async Task<IActionResult> Index()
         {
-            return View (await _unitOfWork.Teachers.GetAll());
+            return View(await _context.Schools.ToListAsync());
         }
 
-        // GET: Teachers/Details/5
+        // GET: Schools/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,34 +33,39 @@ namespace KurdishApp.Controllers
                 return NotFound();
             }
 
-          
-            return View(await _unitOfWork.Teachers.Get(id));
+            var schools = await _context.Schools
+                .SingleOrDefaultAsync(m => m.SchoolId == id);
+            if (schools == null)
+            {
+                return NotFound();
+            }
+
+            return View(schools);
         }
 
-        // GET: Teachers/Create
+        // GET: Schools/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Teachers/Create
+        // POST: Schools/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TeacherId,TName")] Teachers teachers)
+        public async Task<IActionResult> Create([Bind("SchoolId,SName")] Schools schools)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Teachers.Add(teachers);
-                await _unitOfWork.SaveChangesAsync();
-
+                _context.Add(schools);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(teachers);
+            return View(schools);
         }
 
-        // GET: Teachers/Edit/5
+        // GET: Schools/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +73,22 @@ namespace KurdishApp.Controllers
                 return NotFound();
             }
 
-            var teachers = await _unitOfWork.Teachers.Get(id);
-            if (teachers == null)
+            var schools = await _context.Schools.SingleOrDefaultAsync(m => m.SchoolId == id);
+            if (schools == null)
             {
                 return NotFound();
             }
-            return View(teachers);
+            return View(schools);
         }
 
-        // POST: Teachers/Edit/5
+        // POST: Schools/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TeacherId,TName")] Teachers teachers)
+        public async Task<IActionResult> Edit(int id, [Bind("SchoolId,SName")] Schools schools)
         {
-            if (id != teachers.TeacherId)
+            if (id != schools.SchoolId)
             {
                 return NotFound();
             }
@@ -98,12 +97,12 @@ namespace KurdishApp.Controllers
             {
                 try
                 {
-                    _unitOfWork.Teachers.Update(teachers);
-                    await _unitOfWork.SaveChangesAsync();
+                    _context.Update(schools);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeachersExists(teachers.TeacherId))
+                    if (!SchoolsExists(schools.SchoolId))
                     {
                         return NotFound();
                     }
@@ -114,10 +113,10 @@ namespace KurdishApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(teachers);
+            return View(schools);
         }
 
-        // GET: Teachers/Delete/5
+        // GET: Schools/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,35 +124,30 @@ namespace KurdishApp.Controllers
                 return NotFound();
             }
 
-            var teachers = await _unitOfWork.Teachers.Get(id);
-
-            if (teachers == null)
+            var schools = await _context.Schools
+                .SingleOrDefaultAsync(m => m.SchoolId == id);
+            if (schools == null)
             {
                 return NotFound();
             }
 
-            return View(teachers);
+            return View(schools);
         }
 
-        // POST: Teachers/Delete/5
+        // POST: Schools/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-           
-            var teachers = await _unitOfWork.Teachers.GetSingleOrDefault(m => m.TeacherId == id);
-
-            _unitOfWork.Teachers.Remove(teachers);
-
-            await _unitOfWork.SaveChangesAsync();
-
+            var schools = await _context.Schools.SingleOrDefaultAsync(m => m.SchoolId == id);
+            _context.Schools.Remove(schools);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TeachersExists(int id)
+        private bool SchoolsExists(int id)
         {
-            return _unitOfWork.Teachers.GetAny(e => e.TeacherId == id);
-               
+            return _context.Schools.Any(e => e.SchoolId == id);
         }
     }
 }

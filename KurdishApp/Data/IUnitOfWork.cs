@@ -3,11 +3,8 @@
 // Email: support@ebenmonney.com
 // ====================================================
 
-using DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using KurdishApp.Data.Repositories.Interfaces;
 using System.Threading.Tasks;
 
 namespace KurdishApp.Data
@@ -15,10 +12,10 @@ namespace KurdishApp.Data
     public interface IUnitOfWork
     {
       
-        ITeacherRepository Products { get; }
-     
+        ITeacherRepository Teachers { get; }
 
 
-        int SaveChanges();
+
+        Task<int> SaveChangesAsync();
     }
 }

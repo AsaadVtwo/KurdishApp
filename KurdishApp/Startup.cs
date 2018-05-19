@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using KurdishApp.Data;
 using KurdishApp.Models;
 using KurdishApp.Services;
+using KurdishApp.Data.Repositories.Interfaces;
+using KurdishApp.Data.Repositories;
 
 namespace KurdishApp
 {
@@ -41,11 +43,12 @@ namespace KurdishApp
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-
-
-
+            
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+
+            // services.AddScoped<ITeacherRepository, TeacherRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddMvc();
         }

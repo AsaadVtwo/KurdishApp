@@ -4,8 +4,8 @@
 // ====================================================
 
 using Microsoft.EntityFrameworkCore;
-using DAL.Repositories.Interfaces;
 using Kurdish.Models;
+using KurdishApp.Data.Repositories.Interfaces;
 
 namespace KurdishApp.Data.Repositories
 {
@@ -15,8 +15,7 @@ namespace KurdishApp.Data.Repositories
         { }
 
 
-
-
+        
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

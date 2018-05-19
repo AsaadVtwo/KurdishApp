@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DAL.Repositories.Interfaces
+namespace KurdishApp.Data.Repositories.Interfaces
 {
     public interface ITeacherRepository : IRepository<Teachers>
     {

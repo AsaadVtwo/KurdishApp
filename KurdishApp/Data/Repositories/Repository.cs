@@ -3,7 +3,7 @@
 // Email: support@ebenmonney.com
 // ====================================================
 
-using DAL.Repositories.Interfaces;
+
 using KurdishApp.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -71,19 +71,28 @@ namespace KurdishApp.Data.Repositories
             return _entities.Where(predicate);
         }
 
-        public virtual TEntity GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity> GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return _entities.SingleOrDefault(predicate);
+            return await _entities.SingleOrDefaultAsync(predicate);
         }
 
-        public virtual TEntity Get(int id)
+        public virtual async Task<TEntity> Get(int? id)
         {
-            return _entities.Find(id);
+            if (id == null)
+            {
+                return null;
+            }
+            return await _entities.FindAsync(id);
         }
 
-        public virtual IEnumerable<TEntity> GetAll()
+        public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
-            return _entities.ToList();
+            return  await _entities.ToListAsync();
+        }
+
+        public bool GetAny(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.Any(predicate);
         }
     }
 }

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Repositories;
-using DAL.Repositories.Interfaces;
 using KurdishApp.Data.Repositories;
+using KurdishApp.Data.Repositories.Interfaces;
+
 
 namespace KurdishApp.Data
 {
@@ -30,7 +30,7 @@ namespace KurdishApp.Data
         }
         
 
-        public ITeacherRepository Products
+        public ITeacherRepository Teachers
         {
             get
             {
@@ -43,9 +43,9 @@ namespace KurdishApp.Data
 
         
 
-        public int SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
     }
 }

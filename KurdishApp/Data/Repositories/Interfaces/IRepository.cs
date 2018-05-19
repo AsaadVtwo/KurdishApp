@@ -24,11 +24,14 @@ namespace KurdishApp.Data.Repositories.Interfaces
         void RemoveRange(IEnumerable<TEntity> entities);
 
         int Count();
+        bool GetAny(Expression<Func<TEntity, bool>> predicate);
 
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
-        TEntity GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate);
-        TEntity Get(int id);
-        IEnumerable<TEntity> GetAll();
+        Task<TEntity> GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> Get(int? id);
+        Task<IEnumerable<TEntity>> GetAll();
+        
+        
     }
 
 }
